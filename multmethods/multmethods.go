@@ -32,10 +32,6 @@ func FftConv(x []int, y []int) (res []int) {
 }
 
 func Fft(data []complex128) []complex128 {
-	return fft(data)
-}
-
-func fft(data []complex128) []complex128 {
 	if len(data) == 1 {
 		return data
 	}
@@ -58,10 +54,13 @@ func fft(data []complex128) []complex128 {
 }
 
 func InvFft(data []complex128) []complex128 {
-	for i := range data {
-		data[i] = complex(imag(data[i]), real(data[i]))
+	revStr := data[1:]
+	last := len(revStr) - 1
+	for i := 1; i < len(revStr)/2; i++ {
+		revStr[i], revStr[last-i] = revStr[last-i], revStr[i]
 	}
-	fft(data)
+
+	Fft(data)
 	scale := 1.0 / float64(len(data))
 	for i := range data {
 		data[i] = complex(imag(data[i])*scale, real(data[i])*scale)
