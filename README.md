@@ -1,10 +1,8 @@
 # binary-math
 
-[![Build Status](https://api.travis-ci.org/VivaLaPanda/binary-math.svg?branch=master)](https://travis-ci.org/VivaLaPanda/binary-math)
+[![Build Status](https://api.travis-ci.org/VivaLaPanda/poly-convolute.svg?branch=master)](https://travis-ci.org/VivaLaPanda/poly-convolute)
 
-This is a package that uses array representations of binary numbers to do
-math using basic algorithms. It can work with inputs up to the size of
-a Go max integer (9223372036854775807 on 64 bit machine).
+TODO
 
 # Compiling
 
