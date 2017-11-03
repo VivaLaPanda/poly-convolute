@@ -92,3 +92,9 @@ func DirectMult(x []int, y []int) (res []int) {
 	}
 	return out
 }
+
+func RemoveTrailingZeros(in []int) []int {
+	i := 0
+	for i = len(in)-1; i >= 0 && in[i] == 0; i-- {}
+	return in[:i]
+}
