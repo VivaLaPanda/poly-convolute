@@ -46,20 +46,23 @@ func TestFft(t *testing.T) {
 }
 
 var multTests = []struct {
-	inX []int
-	inY []int
-	out []int
+	inX []float64
+	inY []float64
+	out []float64
 }{
-	{[]int{0}, []int{0}, []int{0}},
-	{[]int{1}, []int{1}, []int{1}},
-	{[]int{0, 1}, []int{0, 1}, []int{0, 0, 1}},
-	{[]int{1, -1, 1, -2}, []int{1, -1, 2, -4}, []int{1, -2, 4, -9, 8, -8, 8}},
+	{[]float64{0}, []float64{0}, []float64{0}},
+	{[]float64{1}, []float64{1}, []float64{1}},
+	{[]float64{0, 1}, []float64{0, 1}, []float64{0, 0, 1}},
+	{[]float64{1, -1, 1, -2}, []float64{1, -1, 2, -4}, []float64{1, -2, 4, -9, 8, -8, 8}},
 }
 
 func TestFftConv(t *testing.T) {
 	for _, tt := range multTests {
 		actual := FftConv(tt.inX, tt.inY)
 		actual = actual[:len(actual)-1]
+		for i, elem := range actual {
+			actual[i] = float64(int(elem))
+		}
 
 		if !(reflect.DeepEqual(actual, tt.out)) {
 			t.Errorf("FftConv(%v, %v) => %v, want %v", tt.inX, tt.inY, actual, tt.out)

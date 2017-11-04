@@ -9,7 +9,7 @@ import (
 // returns their convolution.
 // x and y mus tbe the same length and their length must be a multiple of 2
 // This method is not guarunteed to not mutate its input
-func FftConv(x []int, y []int) (res []int) {
+func FftConv(x []float64, y []float64) (res []float64) {
 	xFft := make([]complex128, len(x)*2)
 	yFft := make([]complex128, len(x)*2)
 	for i, elem := range x {
@@ -28,15 +28,9 @@ func FftConv(x []int, y []int) (res []int) {
 	}
 
 	resCmplx := InvFft(convFft)
-	res = make([]int, len(resCmplx))
+	res = make([]float64, len(resCmplx))
 	for i, elem := range resCmplx {
-		var roundElem float64
-		if real(elem) < 0 {
-			roundElem = real(elem) - .5
-		} else {
-			roundElem = real(elem) + .5
-		}
-		res[i] = int(roundElem)
+		res[i] = float64(roundFloat(real(elem), 4))
 	}
 
 	return
@@ -83,8 +77,8 @@ func InvFft(data []complex128) []complex128 {
 	return data
 }
 
-func DirectMult(x []int, y []int) (res []int) {
-	out := make([]int, len(x)+len(y))
+func DirectMult(x []float64, y []float64) (res []float64) {
+	out := make([]float64, len(x)+len(y))
 	for i := 0; i < len(x); i++ {
 		for j := 0; j < len(y); j++ {
 			out[i+j] += x[i] * y[j]
@@ -95,6 +89,28 @@ func DirectMult(x []int, y []int) (res []int) {
 
 func RemoveTrailingZeros(in []int) []int {
 	i := 0
-	for i = len(in)-1; i >= 0 && in[i] == 0; i-- {}
+	for i = len(in) - 1; i >= 0 && in[i] == 0; i-- {
+	}
 	return in[:i]
+}
+
+// return rounded version of x with prec precision.
+func roundFloat(x float64, prec int) float64 {
+	var rounder float64
+	pow := math.Pow(10, float64(prec))
+	intermed := x * pow
+	_, frac := math.Modf(intermed)
+	intermed += .5
+	x = .5
+	if frac < 0.0 {
+		x = -.5
+		intermed -= 1
+	}
+	if frac >= x {
+		rounder = math.Ceil(intermed)
+	} else {
+		rounder = math.Floor(intermed)
+	}
+
+	return rounder / pow
 }
